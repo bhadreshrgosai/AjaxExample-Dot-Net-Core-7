@@ -1,0 +1,55 @@
+﻿@model List<CountryModel>
+
+
+
+<table>
+    <tr>
+        <td>Select Country</td>
+        <td>Select State</td>
+    </tr>
+    <tr>
+        <td>
+            <select name="country" id="country" class="form-control" style="width:200px">
+                <option>Select</option>
+                @foreach (var c in Model)
+                {
+                    <option value="@c.CountryId">@c.CountryName</option>
+                }
+            </select>
+        </td>
+        <td>
+            <select name="state" id="state" class="form-control" style="width:200px">
+                <option>Select</option>
+
+            </select>
+        </td>
+    </tr>
+</table>
+
+@section Scripts
+    {
+
+    <script>
+        $("#country").change(function () {
+            //alert($(this).val());
+            var countryId = $(this).val();
+            $.get("@Url.Action("GetDtateByCountryId","Home")", { cid: countryId }, function (data) {
+                console.log(data);
+                var htmlOutput = `<option value="-1">Select</option>`;
+                $.each(data,function(i,v){
+                    //console.log(`${i}-${v.stateName}`);
+                    htmlOutput += `<option value="${v.stateId}">${v.stateName}</option>`;
+                });
+                $("#state").html(htmlOutput);
+                // var htmlOutput = `<option value="-1">Select</option>`;
+                // $.each(data,funtion(d,i)
+                //         htmlOutput += `<option value="${d.StateId}">${d.StateName}</option>`;
+                // {};)
+                //$("#stsate").html(htmlOutput);
+            });
+        });
+    </script>
+
+}
+
+

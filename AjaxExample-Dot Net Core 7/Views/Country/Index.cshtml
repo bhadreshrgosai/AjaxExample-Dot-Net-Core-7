@@ -1,0 +1,97 @@
+﻿@model IEnumerable<AjaxExample_Dot_Net_Core_7.Models.CountryModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CountryId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CountryName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsActive)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CountryId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CountryName)
+                </td>
+                <td>
+                    @*@Html.DisplayFor(modelItem => item.IsActive)*@
+                    @{
+                        string strChecked = item.IsActive ? "checked" : "";
+                        <input type="checkbox"
+                               name="IsActive_@item.CountryId"
+                               id="IsActive_@item.CountryId"
+                               onclick="ToggelActiveCountry('@strChecked', @item.CountryId)"
+                        @strChecked />
+
+                    }
+
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+    function ToggelActiveCountry(checked, CountryId) {
+        console.log(`${checked} at id ${CountryId}`);
+        var sendData = { Id: CountryId, IsActive: checked == "" ? true : false };
+        $.ajax({
+            method: "post",
+            url: "@Url.Action("ToggelActiveCountry","Country")",
+            data: sendData,
+            success: function (res) {
+                console.log(res);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+
+    }
+</script>
+
+@section Scripts
+    {
+    <script>
+        function ToggelActive(checked, CountryId) {
+            console.log(`${checked} at id ${CountryId}`);
+            var sendData = { Id: CountryId, IsActive: checked == "" ? true : false };
+            $.ajax({
+                method: "post",
+                url: "@Url.Action("ToggelActiveCountry","Country")",
+                data: sendData,
+                success: function (res) {
+                    console.log(res);
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        }
+    </script>
+}
